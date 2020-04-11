@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Отчет о статусе резервного копирования</h1>
+<p><b>Период:</b> за последние 7 дней</p>
+<br>
+<p>Сводная информация по всем бд</p>
+  <div class="backup_summary">
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <td> DB Name </td>
+                <td> Backups </td>
+                <td> Incr LV0 </td>
+            </tr>
+        </thead>
+        <tbody>
+                {% for r in backup_summary_list %}
+                <tr class="bg-danger">
+                    <td><a href="#{{ r.db_name }}"> {{ r.db_name }} </a></td>
+                    <td>{{ r.backups}}</td>
+                    <td>{{ r.incr_lv0}}</td>
+                </tr>
+                    {% else %}
+                    <tr><td><em>no backups found</em></td></tr>
+                    {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+<p>Детализированя информация по каждой бд</p>
+<div class="backup_details">
+{% for db_name, backup_details_list in backup_detail_dict.items() %}
+    <p id="{{db_name}}">{{db_name}}</p>
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <td> DB Name </td>
+                <td> StartON </td>
+                <td> Incr LV0 </td>
+            </tr>
+        </thead>
+        <tbody>
+                {% for r in backup_details_list %}
+                <tr class="bg-danger">
+                    <td>{{ r.db_name }}</td>
+                    <td>{{ r.start_time}}</td>
+                    <td>JOPA</td>
+                </tr>
+                    {% else %}
+                    <tr><td><em>no backups found</em></td></tr>
+                    {% endfor %}
+        </tbody>
+        </table>
+{% endfor %}
+
+</div>
+{% endblock %}

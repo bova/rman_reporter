@@ -1,0 +1,10 @@
+[db]
+host = localhost
+port = 1521
+service_name = orcl
+
+[mail]
+host = localhost
+port = 25
+user = john@local.domain
+password = secret
