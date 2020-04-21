@@ -30,7 +30,10 @@ class Mail:
         # attachments: array of tuples (file_name, file)
         self.attachments = []
         context = ssl.create_default_context()
-        self.mailer = smtplib.SMTP_SSL(host=self.host, port=self.port, context=context)
+        if self.port == 465:
+            self.mailer = smtplib.SMTP_SSL(host=self.host, port=self.port, context=context)
+        else:
+            self.mailer = smtplib.SMTP(host=self.host, port=self.port)
 
     def add_attachment_from_string(self, file_name, file_as_string):
         file = file_as_string.encode(encoding='utf-8')
