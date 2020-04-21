@@ -49,7 +49,7 @@ class Mail:
             self.msg.attach(part)
 
     def connect(self):
-        if self.cfg.mail.user and self.cfg.mail.password:
+        if self.cfg.mail.password:
             self.mailer.login(self.user, self.password)
         else:
             pass
