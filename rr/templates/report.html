@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+    <title>RMAN Report</title>
+{% endblock %}
+
 {% block content %}
 <h1>Отчет о статусе резервного копирования</h1>
 <p><b>Период:</b> за последние 7 дней</p>
@@ -12,14 +16,31 @@
                 <td> DB Name </td>
                 <td> Backups </td>
                 <td> Incr LV0 </td>
+                <td> Incr LV1 </td>
+                <td> Recvr Area </td>
+                <td> Completed </td>
+                <td> Failed </td>
+                <td> Input Size </td>
+                <td> Output Size </td>
             </tr>
         </thead>
         <tbody>
                 {% for r in backup_summary_list %}
-                <tr class="bg-danger">
-                    <td><a href="#{{ r.db_name }}"> {{ r.db_name }} </a></td>
-                    <td>{{ r.backups}}</td>
-                    <td>{{ r.incr_lv0}}</td>
+                    {% if r.failed > 0 or r.completed == 0 %}
+                        {% set tr_class	= 'warning' %}
+				    {% else %}
+					    {% set tr_class = 'success' %}
+				    {% endif %}
+                <tr>
+                    <td class={{ tr_class }}><a href="#{{ r.db_name }}"> {{ r.db_name }} </a></td>
+                    <td class={{ tr_class }}>{{ r.backups}}</td>
+                    <td class={{ tr_class }}>{{ r.incr_lv0}}</td>
+                    <td class={{ tr_class }}>{{ r.incrl_lv1 }}</td>
+                    <td class={{ tr_class }}>{{ r.recvr_area}}</td>
+                    <td class={{ tr_class }}>{{ r.completed}}</td>
+                    <td class={{ tr_class }}>{{ r.failed}}</td>
+                    <td class={{ tr_class }}>{{ r.input_bytes|filesizeformat(true) }}</td>
+                    <td class={{ tr_class }}>{{ r.output_bytes|filesizeformat(true) }}</td>
                 </tr>
                     {% else %}
                     <tr><td><em>no backups found</em></td></tr>
@@ -36,16 +57,37 @@
         <thead>
             <tr>
                 <td> DB Name </td>
-                <td> StartON </td>
-                <td> Incr LV0 </td>
+                <td> StartOn </td>
+                <td> EndOn </td>
+                <td> Duration </td>
+                <td> Input Size </td>
+                <td> Output Size </td>
+                <td> Input Type </td>
+                <td> Incr LV </td>
+                <td> Output Device </td>
+                <td> Status </td>
             </tr>
         </thead>
         <tbody>
                 {% for r in backup_details_list %}
-                <tr class="bg-danger">
-                    <td>{{ r.db_name }}</td>
-                    <td>{{ r.start_time}}</td>
-                    <td>JOPA</td>
+                    {% if r.status == 'COMPLETED WITH ERRORS' %}
+                        {% set tr_class	= 'error' %}
+                    {% elif r.status == 'COMPLETED WITH WARNINGS' %}
+                        {% set tr_class = 'warning' %}
+				    {% else %}
+					    {% set tr_class = 'success' %}
+				    {% endif %}
+                <tr>
+                    <td class={{ tr_class }}>{{ r.db_name }}</td>
+                    <td class={{ tr_class }}>{{ r.start_time}}</td>
+                    <td class={{ tr_class }}>{{ r.end_time }}</td>
+                    <td class={{ tr_class }}>{{ r.hrs }}</td>
+                    <td class={{ tr_class }}>{{ r.input_bytes|filesizeformat(true) }}</td>
+                    <td class={{ tr_class }}>{{ r.output_bytes|filesizeformat(true) }}</td>
+                    <td class={{ tr_class }}>{{ r.input_type }}</td>
+                    <td class={{ tr_class }}>{{ r.incr_lv }}</td>
+                    <td class={{ tr_class }}>{{ r.output_device_type }}</td>
+                    <td class={{ tr_class }}>{{ r.status }}</td>
                 </tr>
                     {% else %}
                     <tr><td><em>no backups found</em></td></tr>

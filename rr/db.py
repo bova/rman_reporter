@@ -2,7 +2,7 @@ import cx_Oracle
 import rr.conf
 
 BACKUP_SUMMARY_SQL = """
-    select Db_Name,
+select Db_Name,
        count(*) Backups,
        count(Case
                when Incr_Lv = 0 then
@@ -24,8 +24,8 @@ BACKUP_SUMMARY_SQL = """
                WHEN Status in ('COMPLETED WITH ERRORS', 'FAILED') THEN
                 1
              END) Failed,
-       sum(Input_Gb) Input_Gb,
-       sum(Output_Gb) Output_Gb
+       sum(Input_Bytes) Input_Bytes,
+       sum(Output_Bytes) Output_Bytes
   from Rr_Rman_Backup_Job_Details
  where End_Time > Trunc(SYSDATE - 7)
  group by Db_Name"""
@@ -40,8 +40,8 @@ BACKUP_DETAILS_SQL = """
            Start_Time,
            End_Time,
            Hrs,
-           Input_Gb,
-           Output_Gb,
+           input_bytes,
+           output_bytes,
            Input_Type,
            Incr_Lv,
            Output_Device_Type,
@@ -55,20 +55,49 @@ class BackupSummary:
     db_name = ''
     backups = ''
     incr_lv0 = ''
+    incr_lv1 = ''
+    recvr_area = ''
+    completed = ''
+    failed = ''
+    input_bytes = ''
+    output_bytes = ''
 
     def __init__(self, cur_result):
         self.db_name = cur_result[0]
         self.backups = cur_result[1]
         self.incr_lv0 = cur_result[2]
+        self.incr_lv1 = cur_result[3]
+        self.recvr_area = cur_result[4]
+        self.completed = cur_result[5]
+        self.failed = cur_result[6]
+        self.input_bytes = cur_result[7]
+        self.output_bytes = cur_result[8]
 
 
 class BackupDetail:
     db_name = ''
     start_time = ''
+    end_time = ''
+    hrs = ''
+    input_bytes = ''
+    output_bytes = ''
+    input_type = ''
+    incr_lv = ''
+    output_device_type = ''
+    status = ''
 
     def __init__(self, cur_result):
         self.db_name = cur_result[0]
         self.start_time = cur_result[1]
+        self.end_time = cur_result[2]
+        self.hrs = cur_result[3]
+        self.input_bytes = cur_result[4]
+        self.output_bytes = cur_result[5]
+        self.input_type = cur_result[6]
+        self.incr_lv = cur_result[7]
+        self.output_device_type = cur_result[8]
+        self.status = cur_result[9]
+
 
 class BackupDetailsSerializer:
     def __init__(self, cur):

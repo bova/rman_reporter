@@ -1,4 +1,9 @@
-## Reuqired Software
+# RMAN Reporter
+
+Created to periodically sending status reports about RMAN tasks.
+Based on data from recovery catalog
+
+## Reuqirements
 
 ### For Windows
 
@@ -9,4 +14,4 @@
     
 ### ALL
 
-* python -m pip install cx_Oracle --upgrade    
+* pip install cx_Oracle --upgrade    
