@@ -1,4 +1,4 @@
-from rr import conf, db, html, mail
+from rr import conf, db, markup, mail
 from datetime import datetime
 import os
 
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     cfg = conf.AppConf()
     cfg.parse(conf.CONF_FILE_CANDIDATES)
     conn = db.DB(cfg)
-    html = html.HTML()
+    html = markup.HTML()
     mailer = mail.Mail(cfg)
 
     backup_summary_list = conn.get_backup_summary()
